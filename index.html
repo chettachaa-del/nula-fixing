@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NuLa Fixing & Services — Selling technology without leaving humanity behind." />
+  <title>NuLa Fixing & Services</title>
+  <style>
+    :root {
+      --bg: #F5F5F7;
+      --surface: #FFFFFF;
+      --ink: #1D1D1F;
+      --ink-secondary: #6E6E73;
+      --accent: #4A2E1B;
+      --accent-hover: #2E1B0F;
+      --accent-soft: #F4EFEA;
+      --border: rgba(0, 0, 0, 0.06);
+      --green-bg: #E8F8EE;
+      --green-text: #147D3F;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.03);
+      --shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.07);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* Frosted Glass Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .container { max-width: 980px; margin: 0 auto; padding: 0 20px; width: 100%; }
+    .nav {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 38px; width: auto; object-fit: contain; border-radius: 8px; }
+    .brand-name { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+
+    /* Language Switcher */
+    .lang-switch {
+      display: inline-flex;
+      background: var(--bg);
+      padding: 3px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+    }
+    .lang-btn {
+      border: none;
+      background: transparent;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .lang-btn.active {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #FFFFFF;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+    /* Hero Banner */
+    .hero {
+      padding: 64px 20px 52px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+    .hero-title {
+      font-size: clamp(1.75rem, 4vw, 2.65rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--ink);
+      max-width: 720px;
+      margin: 0 auto 14px;
+    }
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--ink-secondary);
+      max-width: 560px;
+      margin: 0 auto;
+      font-weight: 400;
+    }
+
+    main { flex: 1; padding-bottom: 72px; display: flex; flex-direction: column; gap: 56px; }
+
+    /* Section Header */
+    .sec-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 22px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .sec-title { font-size: 1.45rem; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+    .sec-title span { color: var(--ink-secondary); font-weight: 500; }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--green-text);
+      box-shadow: var(--shadow-sm);
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; }
+
+    /* Product Cards */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .product-card {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+    .tag-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .status-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--green-bg);
+      color: var(--green-text);
+    }
+    .item-code { font-size: 0.78rem; font-weight: 600; color: var(--ink-secondary); }
+    .product-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .spec-list { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
+    .spec-list li { font-size: 0.85rem; color: var(--ink-secondary); display: flex; align-items: center; gap: 8px; }
+    .spec-list li::before { content: "✓"; color: var(--accent); font-weight: 700; }
+
+    .card-footer {
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .price-label { font-size: 0.72rem; color: var(--ink-secondary); display: block; }
+    .price-value { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+    .btn-outline {
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: var(--accent-soft);
+      color: var(--accent);
+      transition: all 0.15s ease;
+    }
+    .btn-outline:hover { background: var(--accent); color: #FFFFFF; }
+
+    /* Verify Certificate Section */
+    .verify-card {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      padding: 36px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+    .verify-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+    @media (min-width: 720px) { .verify-grid { grid-template-columns: 1.1fr 1fr; } }
+    .verify-title { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .verify-sub { font-size: 0.9rem; color: var(--ink-secondary); }
+    .search-bar { display: flex; gap: 8px; }
+    .search-bar input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid transparent;
+      border-radius: 14px;
+      padding: 13px 16px;
+      font-size: 0.92rem;
+      font-family: inherit;
+      color: var(--ink);
+      transition: all 0.2s ease;
+    }
+    .search-bar input:focus {
+      outline: none;
+      background: var(--surface);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(74, 46, 27, 0.12);
+    }
+    .verify-result {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-radius: var(--radius-lg);
+      background: var(--bg);
+      font-size: 0.88rem;
+      display: none;
+    }
+
+    /* Bento Values */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    .bento-item {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      padding: 26px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    .bento-num { font-size: 0.75rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; display: block; }
+    .bento-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.01em; }
+    .bento-desc { font-size: 0.85rem; color: var(--ink-secondary); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 20px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--ink-secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <img src="logo.png" alt="NuLa Logo" onerror="this.style.display='none'" />
+        <span class="brand-name">NuLa Fixing & Services</span>
+      </div>
+      <div class="nav-actions">
+        <div class="lang-switch" role="group" aria-label="Language Switcher">
+          <button class="lang-btn active" id="btn-th" onclick="setLang('th')">TH</button>
+          <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+        </div>
+        <a href="tel:0922808518" class="btn-primary" data-i18n="contactBtn">ติดต่อร้าน</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <span class="hero-eyebrow" data-i18n="eyebrow">Curated Tech • Human-First</span>
+      <h1 class="hero-title">“Selling technology without leaving humanity behind.”</h1>
+      <p class="hero-desc" data-i18n="heroSub">ขายเทคไม่ทิ้งคน — คัดสรรอุปกรณ์คุณภาพสูง ตรวจเช็กฮาร์ดแวร์อย่างโปร่งใส พร้อมใบรับรองสุขภาพเครื่องและประกันร้าน 30 วัน</p>
+    </div>
+  </section>
+
+  <main class="container">
+    <!-- 1. Storefront -->
+    <section>
+      <div class="sec-header">
+        <h2 class="sec-title" data-i18n="storeTitle">สินค้าพร้อมส่ง <span>คัดสรรและตรวจเช็กแล้ว</span></h2>
+        <div class="live-badge"><span class="dot"></span><span id="sync-text">Live Inventory</span></div>
+      </div>
+      <div id="stock-grid" class="product-grid"></div>
+    </section>
+
+    <!-- 2. Certificate Verification -->
+    <section class="verify-card">
+      <div class="verify-grid">
+        <div>
+          <h2 class="verify-title" data-i18n="verifyTitle">ตรวจสอบใบรับรองสุขภาพเครื่อง</h2>
+          <p class="verify-sub" data-i18n="verifySub">กรอกรหัสประจำเครื่อง (เช่น NU-007) เพื่อยืนยันประวัติการตรวจเช็กฮาร์ดแวร์และสถานะการรับประกัน</p>
+        </div>
+        <div class="search-bar">
+          <input id="cert-input" type="text" placeholder="NU-007" onkeydown="if(event.key==='Enter') verifyCert()" />
+          <button class="btn-primary" style="border-radius:14px;padding:13px 22px;" onclick="verifyCert()" data-i18n="verifyBtn">ตรวจสอบ</button>
+        </div>
+      </div>
+      <div id="cert-result" class="verify-result"></div>
+    </section>
+
+    <!-- 3. Philosophy Bento -->
+    <section>
+      <div class="sec-header">
+        <h2 class="sec-title" data-i18n="whyTitle">มาตรฐานของ NuLa <span>ทำไมต้องเลือกเรา</span></h2>
+      </div>
+      <div class="bento-grid">
+        <div class="bento-item">
+          <span class="bento-num">01 / HUMAN-FIRST</span>
+          <h3 class="bento-title" data-i18n="p1Title">ขายเทคไม่ทิ้งคน</h3>
+          <p class="bento-desc" data-i18n="p1Desc">ให้คำแนะนำอย่างซื่อสัตย์ตามการใช้งานและงบประมาณจริง ไม่ยัดเยียดสเปกเกินความจำเป็น</p>
+        </div>
+        <div class="bento-item">
+          <span class="bento-num">02 / TRANSPARENCY</span>
+          <h3 class="bento-title" data-i18n="p2Title">เปิดเผยประวัติทุกจุด</h3>
+          <p class="bento-desc" data-i18n="p2Desc">ระบุสุขภาพแบตเตอรี่ ประวัติอะไหล่ และรหัสโมเดลในใบรับรองครบถ้วน ตรวจสอบย้อนหลังได้จริง</p>
+        </div>
+        <div class="bento-item">
+          <span class="bento-num">03 / CIRCULAR TECH</span>
+          <h3 class="bento-title" data-i18n="p3Title">ลดขยะอิเล็กทรอนิกส์</h3>
+          <p class="bento-desc" data-i18n="p3Desc">ฟื้นฟูอุปกรณ์คุณภาพดีให้กลับมาใช้งานได้เต็มประสิทธิภาพ ช่วยลด E-waste อย่างยั่งยืน</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      © 2026 NuLa Fixing & Services • “Selling technology without leaving humanity behind” • Tel: 092-280-8518
+    </div>
+  </footer>
+
+  <script>
+    // วาง Web App URL จาก Google Apps Script ของบอสตรงนี้:
+    const API_URL = "https://script.google.com/macros/s/AKfycbwSLOstoc8wKeN_EDDAap3jTNRxZAAeG-HpNqDn6iJJ-ibwVzRaPbvV6r4EF9kXCjGb3g/exec";
+
+    let currentLang = "th";
+    let stockCache = [];
+    let allDevicesCache = [];
+
+    const i18n = {
+      th: {
+        contactBtn: "ติดต่อร้าน",
+        eyebrow: "Curated Tech • Human-First",
+        heroSub: "ขายเทคไม่ทิ้งคน — คัดสรรอุปกรณ์คุณภาพสูง ตรวจเช็กฮาร์ดแวร์อย่างโปร่งใส พร้อมใบรับรองสุขภาพเครื่องและประกันร้าน 30 วัน",
+        storeTitle: "สินค้าพร้อมส่ง <span>คัดสรรและตรวจเช็กแล้ว</span>",
+        verifyTitle: "ตรวจสอบใบรับรองสุขภาพเครื่อง",
+        verifySub: "กรอกรหัสประจำเครื่อง (เช่น NU-007) เพื่อยืนยันประวัติการตรวจเช็กฮาร์ดแวร์และสถานะการรับประกัน",
+        verifyBtn: "ตรวจสอบ",
+        whyTitle: "มาตรฐานของ NuLa <span>ทำไมต้องเลือกเรา</span>",
+        p1Title: "ขายเทคไม่ทิ้งคน",
+        p1Desc: "ให้คำแนะนำอย่างซื่อสัตย์ตามการใช้งานและงบประมาณจริง ไม่ยัดเยียดสเปกเกินความจำเป็น",
+        p2Title: "เปิดเผยประวัติทุกจุด",
+        p2Desc: "ระบุสุขภาพแบตเตอรี่ ประวัติอะไหล่ และรหัสโมเดลในใบรับรองครบถ้วน ตรวจสอบย้อนหลังได้จริง",
+        p3Title: "ลดขยะอิเล็กทรอนิกส์",
+        p3Desc: "ฟื้นฟูอุปกรณ์คุณภาพดีให้กลับมาใช้งานได้เต็มประสิทธิภาพ ช่วยลด E-waste อย่างยั่งยืน",
+        badgeAvail: "พร้อมส่ง",
+        spec1: "ผ่านการตรวจเช็กฮาร์ดแวร์ครบทุกระบบ",
+        spec2: "มาพร้อมใบรับรองสุขภาพเครื่อง (NuLa Certificate)",
+        spec3: "รับประกันร้าน 30 วันเต็ม",
+        priceLabel: "ราคาสุทธิ",
+        inquireBtn: "สอบถาม / นัดรับ",
+        emptyStock: "ขณะนี้สินค้าในสต็อกถูกจำหน่ายหมดแล้ว กำลังเตรียมอัปเดตล็อตใหม่เร็ว ๆ นี้ครับ",
+        foundTitle: "✓ พบข้อมูลในระบบ NuLa Verified Database",
+        notFound: "✕ ไม่พบรหัสเครื่องนี้ในระบบ กรุณาตรวจสอบรหัสบนใบรับรองอีกครั้ง",
+        lblId: "รหัสเครื่อง",
+        lblModel: "รุ่นและสเปก",
+        lblStatus: "สถานะปัจจุบัน",
+        lblWarranty: "การรับประกัน"
+      },
+      en: {
+        contactBtn: "Contact",
+        eyebrow: "Curated Tech • Human-First",
+        heroSub: "Thoughtfully refurbished devices with full hardware diagnostics, verified health certificates, and a 30-day shop warranty.",
+        storeTitle: "Available Devices <span>Tested & Ready</span>",
+        verifyTitle: "Verify Device Health Certificate",
+        verifySub: "Enter your device ID (e.g. NU-007) to verify its hardware inspection record and warranty status.",
+        verifyBtn: "Verify",
+        whyTitle: "The NuLa Standard <span>Built on Trust</span>",
+        p1Title: "Human-First Philosophy",
+        p1Desc: "Honest recommendations tailored to your actual needs and budget—never upselling unnecessary specs.",
+        p2Title: "100% Transparent History",
+        p2Desc: "Battery health, part history, and model origins are clearly documented on every certificate.",
+        p3Title: "Sustainable Circular Tech",
+        p3Desc: "Extending the lifespan of quality hardware to reduce electronic waste responsibly.",
+        badgeAvail: "AVAILABLE",
+        spec1: "Full multi-point hardware diagnostics passed",
+        spec2: "Includes official NuLa Device Health Certificate",
+        spec3: "30-day shop warranty & bill of sale",
+        priceLabel: "Price",
+        inquireBtn: "Inquire",
+        emptyStock: "All curated units are currently sold out. New verified devices are being prepared soon.",
+        foundTitle: "✓ Verified in NuLa Device Database",
+        notFound: "✕ Device ID not found. Please double-check the code on your certificate.",
+        lblId: "Item ID",
+        lblModel: "Model & Specs",
+        lblStatus: "Current Status",
+        lblWarranty: "Warranty"
+      }
+    };
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById("btn-th").classList.toggle("active", lang === "th");
+      document.getElementById("btn-en").classList.toggle("active", lang === "en");
+
+      const dict = i18n[lang];
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.innerHTML = dict[key];
+      });
+
+      renderProducts();
+      if (document.getElementById("cert-result").style.display === "block") {
+        verifyCert();
+      }
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById("stock-grid");
+      const dict = i18n[currentLang];
+
+      if (!stockCache || stockCache.length === 0) {
+        grid.innerHTML = `<div class="product-card" style="grid-column:1/-1;text-align:center;"><p class="verify-sub">${dict.emptyStock}</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = stockCache.map(item => `
+        <article class="product-card">
+          <div>
+            <div class="tag-row">
+              <span class="status-pill">${dict.badgeAvail}</span>
+              <span class="item-code">${item.id}</span>
+            </div>
+            <h3 class="product-name">${item.model}</h3>
+            <ul class="spec-list">
+              <li>${dict.spec1}</li>
+              <li>${dict.spec2}</li>
+              <li>${dict.spec3}</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <div>
+              <span class="price-label">${dict.priceLabel}</span>
+              <span class="price-value">฿${Number(item.price).toLocaleString()}</span>
+            </div>
+            <a href="tel:0922808518" class="btn-outline">${dict.inquireBtn}</a>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    async function loadInventory() {
+      const cached = sessionStorage.getItem("nula_stock_v2");
+      const cachedTime = sessionStorage.getItem("nula_stock_v2_time");
+      if (cached && cachedTime && (Date.now() - Number(cachedTime) < 120000)) {
+        const parsed = JSON.parse(cached);
+        stockCache = parsed.inStock || [];
+        allDevicesCache = parsed.allDevices || [];
+        renderProducts();
+        return;
+      }
+
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        sessionStorage.setItem("nula_stock_v2", JSON.stringify(data));
+        sessionStorage.setItem("nula_stock_v2_time", String(Date.now()));
+        stockCache = data.inStock || [];
+        allDevicesCache = data.allDevices || [];
+        renderProducts();
+      } catch (err) {
+        document.getElementById("sync-text").textContent = "Offline";
+      }
+    }
+
+    function verifyCert() {
+      const code = document.getElementById("cert-input").value.trim().toUpperCase();
+      if (!code) return;
+      const box = document.getElementById("cert-result");
+      const dict = i18n[currentLang];
+      const found = allDevicesCache.find(d => String(d.id).toUpperCase() === code);
+
+      box.style.display = "block";
+      if (found) {
+        box.innerHTML = `
+          <p style="font-weight:700;color:#147D3F;margin-bottom:8px;">${dict.foundTitle}</p>
+          <p><strong>${dict.lblId}:</strong> ${found.id}</p>
+          <p><strong>${dict.lblModel}:</strong> ${found.model}</p>
+          <p><strong>${dict.lblStatus}:</strong> ${found.status}</p>
+          <p><strong>${dict.lblWarranty}:</strong> ${found.warranty}</p>
+        `;
+      } else {
+        box.innerHTML = `<p style="font-weight:700;color:#B3261E;">${dict.notFound}</p>`;
+      }
+    }
+
+    loadInventory();
+  </script>
+</body>
+</html>
