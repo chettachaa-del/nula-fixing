@@ -86,6 +86,20 @@ footer p+p{margin-top:6px}
 .mb{animation:fade .2s ease-out}
 .ms{animation:rise .25s ease-out}
 #cert-result:not([hidden]){animation:fade .25s ease-out}
+/* ===== Gallery: native scroll-snap, pill dots ===== */
+.gal{position:relative;margin-bottom:12px;border-radius:16px;overflow:hidden;background:var(--soft)}
+.gs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.gs::-webkit-scrollbar{display:none}
+.gs img{flex:0 0 100%;width:100%;aspect-ratio:1;object-fit:contain;scroll-snap-align:center;opacity:0;transition:opacity .3s}
+.gs img.in{opacity:1}
+.dots{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:rgba(40,38,28,.6)}
+.dots button{position:relative;width:6px;height:6px;padding:0;border:0;border-radius:999px;background:rgba(255,255,255,.55);cursor:pointer;transition:width .35s cubic-bezier(.4,0,.2,1),background .25s}
+.dots button::after{content:"";position:absolute;inset:-8px -3px}
+.dots button.on{width:22px;background:#fff}
+.nv{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:0;background:rgba(40,38,28,.6);color:#fff;font-size:1.2rem;line-height:1;cursor:pointer;display:none}
+.nv.p{left:8px}.nv.n{right:8px}
+@media (hover:hover){.nv{display:block}}
+.cnt{position:absolute;right:8px;top:8px;z-index:1;background:rgba(40,38,28,.65);color:#fff;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px}
 </style>
 </head>
 <body>
@@ -152,8 +166,8 @@ footer p+p{margin-top:6px}
     <div class="fg"><label for="adm-status">สถานะ</label><select id="adm-status"><option value="Available">Available (พร้อมขาย)</option><option value="Sold">Sold (ขายแล้ว)</option></select></div>
     <div class="fg"><label for="adm-price">ราคาขาย (บาท)</label><input id="adm-price" type="number" inputmode="numeric"></div>
     <div class="fg"><label for="adm-desc">คำอธิบาย / สุขภาพแบต / ตำหนิ</label><textarea id="adm-desc" rows="3" maxlength="600"></textarea></div>
-    <div class="fg"><label for="adm-file">รูปเครื่อง (.jpg / .png) — แนะนำให้วางไฟล์ NU-xxx.jpg ในโฟลเดอร์เว็บแทน เว็บจะเร็วกว่า</label><input id="adm-file" type="file" accept="image/jpeg,image/png,image/webp"></div>
-    <img id="adm-prev" alt="" hidden style="max-height:150px;border-radius:12px;margin-bottom:12px">
+    <div class="fg"><label for="adm-img">รูปเครื่อง: ชื่อไฟล์ในโฟลเดอร์ img/ บรรทัดละ 1 รูป (สูงสุด 10) รูปแรกคือรูปปก</label><textarea id="adm-img" rows="4" placeholder="NU-007-1.webp&#10;NU-007-2.webp"></textarea></div>
+    <div id="adm-thumbs" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px"></div>
     <div class="fg"><label for="adm-fb">ลิงก์โพสต์ Facebook (https://…)</label><input id="adm-fb" type="url"></div>
     <button class="btn" id="adm-save" type="button" style="width:100%">บันทึก</button>
   </div>
@@ -196,8 +210,9 @@ en:{contact:"Contact",ribbon:"Every device is hardware-checked, with a certifica
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const safeUrl = u => /^https:\/\//i.test(u || "") ? u : CONFIG.FB_PAGE;
-const safeImg = u => /^(data:image\/(jpeg|png|webp);base64,|https:\/\/)/i.test(u || "") ? u : "";
-const imgOf = i => safeImg(i.image) || encodeURIComponent(i.id) + ".jpg";
+const imgUrl = u => { u = String(u || "").trim(); if(/^https:\/\//i.test(u)) return u; return /^[\w\-.]+\.(jpe?g|png|webp|avif)$/i.test(u) ? "img/" + u : ""; };
+const imgsOf = i => { const l = (Array.isArray(i.images) ? i.images : []).map(imgUrl).filter(Boolean).slice(0, 10); return l.length ? l : [encodeURIComponent(i.id) + ".jpg"]; };
+const imgOf = i => imgsOf(i)[0];
 const tx = s => String(s).replace("{d}", CONFIG.WARRANTY_DAYS);
 const warr = () => lang === "th" ? `ประกันร้าน NuLa ${CONFIG.WARRANTY_DAYS} วัน` : `${CONFIG.WARRANTY_DAYS}-day NuLa shop warranty`;
 const money = n => "฿" + Number(n || 0).toLocaleString("en-US");
@@ -222,7 +237,7 @@ function render(){
   g.classList.toggle("static", rendered); rendered = true;
   g.innerHTML = stock.length ? stock.map(i => `
     <article class="card">
-      <div class="ph" data-code="${esc(i.id)}" data-id="${esc(i.id)}"><img loading="lazy" decoding="async" src="${esc(imgOf(i))}" alt="${esc(i.model)}" onload="this.classList.add('in')" onerror="this.remove()"></div>
+      <div class="ph" data-code="${esc(i.id)}" data-id="${esc(i.id)}"><img loading="lazy" decoding="async" src="${esc(imgOf(i))}" alt="${esc(i.model)}" onload="this.classList.add('in')" onerror="this.remove()">${imgsOf(i).length > 1 ? `<span class="cnt">+${imgsOf(i).length - 1}</span>` : ""}</div>
       <div class="cb">
         <span class="tag">${esc(t.badge)} · ${esc(i.id)}</span>
         <h3>${esc(i.model)}</h3>
@@ -236,6 +251,35 @@ function render(){
     </article>`).join("") : `<p class="msg">${esc(t.empty)}</p>`;
 }
 
+function galleryHTML(list, alt){
+  const imgs = list.map((u, k) => `<img src="${esc(u)}" alt="${esc(alt)} ${k + 1}"${k ? ' loading="lazy"' : ''} decoding="async" onload="this.classList.add('in')" onerror="this.remove()">`).join("");
+  const nav = list.length > 1
+    ? `<div class="dots">${list.map((_, k) => `<button type="button" class="${k ? "" : "on"}" aria-label="${k + 1}/${list.length}"></button>`).join("")}</div><button class="nv p" type="button" aria-label="Previous">‹</button><button class="nv n" type="button" aria-label="Next">›</button>`
+    : "";
+  return `<div class="gal"><div class="gs">${imgs}</div>${nav}</div>`;
+}
+
+function initGallery(root){
+  const gs = root.querySelector(".gs"), dots = root.querySelectorAll(".dots button");
+  if(!gs || !dots.length) return;
+  const calm = matchMedia("(prefers-reduced-motion:reduce)").matches;
+  let cur = 0, tick = 0;
+  const go = k => { k = Math.max(0, Math.min(dots.length - 1, k)); gs.scrollTo({left: k * gs.clientWidth, behavior: calm ? "auto" : "smooth"}); };
+  gs.addEventListener("scroll", () => {
+    if(tick) return;
+    tick = requestAnimationFrame(() => {
+      tick = 0;
+      const k = Math.min(dots.length - 1, Math.round(gs.scrollLeft / gs.clientWidth));
+      if(k !== cur){ dots[cur].classList.remove("on"); dots[k].classList.add("on"); cur = k; }
+    });
+  }, {passive:true});
+  dots.forEach((d, k) => d.addEventListener("click", () => go(k)));
+  root.querySelector(".nv.p").addEventListener("click", () => go(cur - 1));
+  root.querySelector(".nv.n").addEventListener("click", () => go(cur + 1));
+  gs.tabIndex = 0;
+  gs.addEventListener("keydown", e => { if(e.key === "ArrowRight") go(cur + 1); if(e.key === "ArrowLeft") go(cur - 1); });
+}
+
 function openDetail(id){
   const i = stock.find(d => d.id === id); if(!i) return;
   const t = T[lang];
@@ -243,7 +287,7 @@ function openDetail(id){
     <span class="tag">${esc(t.badge)} · ${esc(i.id)}</span>
     <h3 style="font-size:1.4rem;margin:8px 0 2px">${esc(i.model)}</h3>
     <p style="font-size:1.25rem;font-weight:700;margin-bottom:12px">${money(i.price)}</p>
-    <img src="${esc(imgOf(i))}" alt="" onerror="this.remove()" style="width:100%;max-height:300px;object-fit:cover;border-radius:16px">
+    ${galleryHTML(imgsOf(i), i.model)}
     <div class="box"><p style="font-weight:700;margin-bottom:6px">${esc(t.detailH)}</p>
       <p style="color:var(--mut);white-space:pre-line">${esc(i.desc || tx(t.defSub))}</p>
       <p class="ok" style="margin-top:10px">✓ ${esc(warr())}</p></div>
@@ -253,6 +297,7 @@ function openDetail(id){
       <a class="btn o" href="${esc(safeUrl(i.fbLink))}" target="_blank" rel="noopener">💬 ${esc(t.post)}</a>
     </div>`;
   $("detail").style.display = "flex";
+  initGallery($("detail-body"));
   certLink(i.id).then(u => { if(u) $("cert-slot").innerHTML = `<a class="ok" href="${esc(u)}" target="_blank" rel="noopener">📄 ${esc(CERT_TXT[lang])}</a>`; });
 }
 
@@ -290,12 +335,12 @@ async function verify(){
 }
 
 /* ===== Admin: ต้องใส่ PIN, ข้อมูลเต็มดึงผ่าน POST เท่านั้น ===== */
-let adm = [], pin = "", img64 = "";
+let adm = [], pin = "";
 const msg = (s, bad) => { const m = $("adm-msg"); m.textContent = s; m.className = bad ? "bad" : "ok"; };
 const post = async body => (await fetch(CONFIG.API_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(body)})).json();
 
 function openAdmin(){ $("adm-form").hidden = true; $("adm-pin").value = ""; msg(""); $("admin").style.display = "flex"; }
-function closeAll(){ document.querySelectorAll(".mb").forEach(m => m.style.display = "none"); pin = ""; adm = []; img64 = ""; }
+function closeAll(){ document.querySelectorAll(".mb").forEach(m => m.style.display = "none"); pin = ""; adm = []; }
 
 async function unlock(){
   pin = $("adm-pin").value.trim();
@@ -314,36 +359,22 @@ function fill(){
   const d = adm.find(x => x.id === $("adm-id").value); if(!d) return;
   $("adm-status").value = /^(available|in stock)$/i.test(d.status) ? "Available" : "Sold";
   $("adm-price").value = d.price || ""; $("adm-desc").value = d.desc || ""; $("adm-fb").value = d.fbLink || "";
-  img64 = ""; $("adm-prev").hidden = true; $("adm-file").value = "";
+  $("adm-img").value = (d.images || []).join("\n"); thumbs();
 }
 
-function onFile(e){
-  const f = e.target.files[0]; if(!f) return;
-  if(/heic|heif/i.test(f.type + f.name)) return msg("ไฟล์ HEIC ใช้ไม่ได้ กรุณาแปลงเป็น JPEG ก่อน (Mac: คลิกขวา > Quick Actions > Convert Image)", true);
-  const rd = new FileReader();
-  rd.onload = () => {
-    const im = new Image();
-    im.onload = () => {
-      const s = Math.min(1, 380 / Math.max(im.width, im.height)), c = document.createElement("canvas");
-      c.width = Math.round(im.width * s); c.height = Math.round(im.height * s);
-      c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
-      let q = .65, out = c.toDataURL("image/jpeg", q);
-      while(out.length > 48000 && q > .3){ q -= .1; out = c.toDataURL("image/jpeg", q); }
-      if(out.length > 48000) return msg("รูปใหญ่เกินไป ลองรูปอื่น หรือวางไฟล์ในโฟลเดอร์เว็บแทน", true);
-      img64 = out; $("adm-prev").src = out; $("adm-prev").hidden = false; msg("เตรียมรูปแล้ว กดบันทึกได้เลย");
-    };
-    im.onerror = () => msg("อ่านไฟล์รูปนี้ไม่ได้", true);
-    im.src = rd.result;
-  };
-  rd.readAsDataURL(f);
+function thumbs(){
+  const names = $("adm-img").value.split(/[\s,]+/).filter(Boolean).slice(0, 10);
+  $("adm-thumbs").innerHTML = names.map(n => { const u = imgUrl(n); return u
+    ? `<img src="${esc(u)}" alt="" title="${esc(n)}" style="width:56px;height:56px;object-fit:cover;border-radius:8px;border:2px solid var(--ok)" onerror="this.style.borderColor='var(--bad)'">`
+    : `<span class="bad" style="font-size:.78rem">✕ ${esc(n.slice(0, 18))}</span>`; }).join("");
 }
 
 async function save(){
   const b = $("adm-save"); b.disabled = true; msg("กำลังบันทึก…");
   try{
     const r = await post({pin, id:$("adm-id").value, status:$("adm-status").value, price:$("adm-price").value,
-      desc:$("adm-desc").value.trim(), fbLink:$("adm-fb").value.trim(), image:img64});
-    if(r.ok){ msg("✓ บันทึกลง Google Sheets แล้ว"); img64 = ""; load(); }
+      desc:$("adm-desc").value.trim(), fbLink:$("adm-fb").value.trim(), images:$("adm-img").value});
+    if(r.ok){ msg("✓ บันทึกลง Google Sheets แล้ว"); load(); }
     else msg(r.error || "บันทึกไม่สำเร็จ", true);
   }catch(e){ msg("บันทึกไม่สำเร็จ (เชื่อมต่อไม่ได้) กรุณาลองใหม่", true); }
   b.disabled = false;
@@ -360,7 +391,7 @@ $("admin-btn").addEventListener("click", openAdmin);
 $("unlock").addEventListener("click", unlock);
 $("adm-pin").addEventListener("keydown", e => { if(e.key === "Enter") unlock(); });
 $("adm-id").addEventListener("change", fill);
-$("adm-file").addEventListener("change", onFile);
+$("adm-img").addEventListener("input", thumbs);
 $("adm-save").addEventListener("click", save);
 if(location.hash === "#admin") $("admin-btn").hidden = false;
 addEventListener("hashchange", () => { $("admin-btn").hidden = location.hash !== "#admin"; });
