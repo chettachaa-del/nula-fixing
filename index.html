@@ -193,6 +193,11 @@ th:{contact:"ติดต่อร้าน",ribbon:"ทุกเครื่อ
  p2t:"เปิดเผยประวัติ",p2d:"สุขภาพแบต ประวัติอะไหล่ และรหัสเครื่องอยู่ในใบรับรอง ตรวจย้อนหลังได้",
  p3t:"ลดขยะอิเล็กทรอนิกส์",p3d:"ให้อุปกรณ์ที่ยังดีได้กลับมาใช้งานอีกครั้ง",
  detailH:"รายละเอียดและการตรวจเช็ก",call:"โทรสอบถาม / นัดรับ",post:"ดูโพสต์บน Facebook",
+ resBtn:"จองคิว / ให้ร้านติดต่อกลับ",resTitle:"ลงชื่อจองคิวเครื่องนี้",resName:"ชื่อเล่น / ชื่อผู้ติดต่อ",
+ resContact:"เบอร์โทร หรือ LINE ID",resNote:"หมายเหตุเพิ่มเติม (เช่น นัดรับ / ขอรูปเพิ่ม)",
+ resSubmit:"ส่งข้อมูลให้ร้านติดต่อกลับ",resSending:"กำลังส่งข้อมูล…",
+ resOk:"✓ ร้านได้รับคิวจองแล้ว! จะรีบติดต่อกลับทางช่องทางที่แจ้งไว้ครับ",
+ resErr:"ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่หรือโทรติดต่อร้านโดยตรง",
  foot:"© 2026 NuLa Fixing & Services • ขายเทคไม่ทิ้งคน",disc:"NuLa เป็นร้านอิสระ ไม่ได้เกี่ยวข้องกับ Apple, Samsung หรือแบรนด์ที่จำหน่าย"},
 en:{contact:"Contact",ribbon:"Every device is hardware-checked, with a certificate and {d}-day warranty.",ribbonLink:"Verify certificate",
  h1:"Selling technology without leaving humanity behind",sub:"Pre-owned devices repaired and checked by real people, described honestly at a fair price.",browse:"Browse devices",fbBtn:"Facebook page",
@@ -204,6 +209,11 @@ en:{contact:"Contact",ribbon:"Every device is hardware-checked, with a certifica
  p2t:"Transparent history",p2d:"Battery health, parts history and model ID are on every certificate.",
  p3t:"Less e-waste",p3d:"Giving good hardware a second life.",
  detailH:"Details and inspection",call:"Call / arrange pickup",post:"View post on Facebook",
+ resBtn:"Reserve / Request callback",resTitle:"Reserve this device",resName:"Your name",
+ resContact:"Phone number or LINE ID",resNote:"Optional note (e.g. pickup / request extra photos)",
+ resSubmit:"Send reservation request",resSending:"Sending…",
+ resOk:"✓ Reservation received! We will contact you shortly.",
+ resErr:"Could not send request. Please try again or call us directly.",
  foot:"© 2026 NuLa Fixing & Services • Selling technology without leaving humanity behind",disc:"NuLa is an independent shop, not affiliated with Apple, Samsung or other brands sold."}
 };
 
@@ -292,13 +302,55 @@ function openDetail(id){
       <p style="color:var(--mut);white-space:pre-line">${esc(i.desc || tx(t.defSub))}</p>
       <p class="ok" style="margin-top:10px">✓ ${esc(warr())}</p></div>
     <p id="cert-slot" style="margin-bottom:10px"></p>
-    <div class="stack">
-      <a class="btn" href="tel:${CONFIG.TEL}">📞 ${esc(t.call)} (${CONFIG.TEL_SHOW})</a>
+
+    <div class="stack" id="detail-actions">
+      <button class="btn" type="button" id="toggle-res">📌 ${esc(t.resBtn)}</button>
       <a class="btn o" href="${esc(safeUrl(i.fbLink))}" target="_blank" rel="noopener">💬 ${esc(t.post)}</a>
-    </div>`;
+      <a class="btn o" href="tel:${CONFIG.TEL}">📞 ${esc(t.call)} (${CONFIG.TEL_SHOW})</a>
+    </div>
+
+    <form id="res-form" class="box" hidden style="margin-top:12px">
+      <p style="font-weight:700;margin-bottom:10px">${esc(t.resTitle)} (${esc(i.id)})</p>
+      <div class="fg"><label for="res-name">${esc(t.resName)} *</label><input id="res-name" required maxlength="80"></div>
+      <div class="fg"><label for="res-contact">${esc(t.resContact)} *</label><input id="res-contact" required maxlength="100" placeholder="08x-xxx-xxxx / @lineid"></div>
+      <div class="fg"><label for="res-note">${esc(t.resNote)}</label><input id="res-note" maxlength="250"></div>
+      <button class="btn" type="submit" id="res-sub" style="width:100%">${esc(t.resSubmit)}</button>
+      <p id="res-msg" style="margin-top:10px;font-weight:600;font-size:.86rem;text-align:center" role="status"></p>
+    </form>`;
+
   $("detail").style.display = "flex";
   initGallery($("detail-body"));
   certLink(i.id).then(u => { if(u) $("cert-slot").innerHTML = `<a class="ok" href="${esc(u)}" target="_blank" rel="noopener">📄 ${esc(CERT_TXT[lang])}</a>`; });
+
+  $("toggle-res").addEventListener("click", () => {
+    const f = $("res-form");
+    f.hidden = !f.hidden;
+    if(!f.hidden) $("res-name").focus();
+  });
+
+  $("res-form").addEventListener("submit", async e => {
+    e.preventDefault();
+    const btn = $("res-sub"), m = $("res-msg");
+    btn.disabled = true; m.className = ""; m.textContent = t.resSending;
+    try {
+      const r = await post({
+        action: "reserve",
+        id: i.id,
+        name: $("res-name").value.trim(),
+        contact: $("res-contact").value.trim(),
+        note: $("res-note").value.trim()
+      });
+      if(r.ok) {
+        m.className = "ok"; m.textContent = t.resOk;
+        e.target.reset();
+      } else {
+        m.className = "bad"; m.textContent = r.error || t.resErr;
+      }
+    } catch(err) {
+      m.className = "bad"; m.textContent = t.resErr;
+    }
+    btn.disabled = false;
+  });
 }
 
 async function load(){
