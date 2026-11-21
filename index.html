@@ -7,8 +7,8 @@
 <meta name="description" content="NuLa Fixing & Services — ขายเทคไม่ทิ้งคน | Selling technology without leaving humanity behind.">
 <title>NuLa Fixing & Services</title>
 <style>
-:root{--bg:#F4F1E8;--surface:#FFFEFA;--ink:#2B2418;--mut:#6B6250;--brand:#3A3524;--brand-ink:#FFFFFF;--soft:#ECE9D8;--line:rgba(58,53,36,.15);--ok:#2F6B3F;--okbg:#E3F0E4;--bad:#A3281F;--pink:#C98A9A}
-@media (prefers-color-scheme:dark){:root{--bg:#000;--surface:#14130E;--ink:#EFEBDD;--mut:#A39C86;--brand:#ECE9D8;--brand-ink:#1B1910;--soft:#201E15;--line:rgba(236,233,216,.16);--ok:#8FD19E;--okbg:#14261A;--bad:#F0A39C}}
+:root{--bg:#F4F1E8;--surface:#FFFEFA;--ink:#2B2418;--mut:#6B6250;--brand:#3A3524;--brand-ink:#FFFFFF;--soft:#ECE9D8;--line:rgba(58,53,36,.15);--ok:#2F6B3F;--okbg:#E3F0E4;--bad:#A3281F;--pink:#C98A9A;--star:#D9822B}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--surface:#14130E;--ink:#EFEBDD;--mut:#A39C86;--brand:#ECE9D8;--brand-ink:#1B1910;--soft:#201E15;--line:rgba(236,233,216,.16);--ok:#8FD19E;--okbg:#14261A;--bad:#F0A39C;--star:#F5B041}}
 *{box-sizing:border-box;margin:0}
 [hidden]{display:none!important}
 html{scroll-behavior:smooth}
@@ -34,6 +34,8 @@ header{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:
 .hero .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 section{padding:30px 0}
 h2{font-size:1.4rem;letter-spacing:-.01em;margin-bottom:14px}
+.sechead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.sechead h2{margin-bottom:0}
 .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
 .msg{grid-column:1/-1;padding:22px;border:1px dashed var(--line);border-radius:16px;color:var(--mut);text-align:center}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
@@ -57,6 +59,20 @@ input,select,textarea{width:100%;font:inherit;font-size:.95rem;padding:11px 13px
 .vals div{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px}
 .vals h3{font-size:1.02rem;margin-bottom:4px}
 .vals p{font-size:.86rem;color:var(--mut)}
+
+/* ===== Customer Reviews ===== */
+.rgrid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.rcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;animation:up .4s ease-out backwards}
+.rtop{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.stars{color:var(--star);font-size:.95rem;letter-spacing:1.5px}
+.rtxt{font-size:.9rem;line-height:1.55;color:var(--ink)}
+.rphotos{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.rphotos img{width:68px;height:68px;object-fit:cover;border-radius:10px;border:1px solid var(--line);cursor:pointer;transition:transform .15s}
+.rphotos img:hover{transform:scale(1.05)}
+.rfoot{border-top:1px solid var(--line);padding-top:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.78rem;color:var(--mut)}
+.rcode{background:var(--soft);padding:3px 9px;border-radius:8px;font-weight:600;color:var(--ink);white-space:nowrap;border:0;cursor:pointer;font-family:inherit;font-size:.75rem}
+.rcode:hover{opacity:.8}
+
 footer{border-top:1px solid var(--line);padding:26px 16px 38px;text-align:center;font-size:.78rem;color:var(--mut)}
 footer p+p{margin-top:6px}
 .mb{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center}
@@ -69,7 +85,6 @@ footer p+p{margin-top:6px}
 .box{background:var(--bg);padding:14px;border-radius:14px;font-size:.9rem;margin:14px 0}
 .stack{display:flex;flex-direction:column;gap:10px}
 
-/* ===== Minimal motion: opacity/transform only, off when user prefers reduced motion ===== */
 @keyframes up{from{opacity:0;transform:translateY(8px)}}
 @keyframes fade{from{opacity:0}}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}}
@@ -86,7 +101,6 @@ footer p+p{margin-top:6px}
 .mb{animation:fade .2s ease-out}
 .ms{animation:rise .25s ease-out}
 #cert-result:not([hidden]){animation:fade .25s ease-out}
-/* ===== Gallery: native scroll-snap, pill dots ===== */
 .gal{position:relative;margin-bottom:12px;border-radius:16px;overflow:hidden;background:var(--soft)}
 .gs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
 .gs::-webkit-scrollbar{display:none}
@@ -129,6 +143,15 @@ footer p+p{margin-top:6px}
 
 <section id="stock"><div class="c"><h2 data-i="stockH"></h2><div class="grid" id="grid"></div></div></section>
 
+<!-- รีวิวจากลูกค้าจริง + ปุ่มเขียนรีวิว -->
+<section id="reviews-sec"><div class="c">
+  <div class="sechead">
+    <h2 data-i="revH"></h2>
+    <button class="btn o sm" id="open-rev" type="button" data-i="revWriteBtn"></button>
+  </div>
+  <div class="rgrid" id="rgrid"></div>
+</div></section>
+
 <section id="verify"><div class="c"><div class="vcard">
   <h2 data-i="vTitle"></h2>
   <p class="s" data-i="vSub"></p>
@@ -155,6 +178,33 @@ footer p+p{margin-top:6px}
 <!-- รายละเอียดเครื่อง -->
 <div class="mb" id="detail"><div class="ms"><button class="x" type="button" aria-label="Close" data-close>✕</button><div id="detail-body"></div></div></div>
 
+<!-- ฟอร์มเขียนรีวิวของลูกค้า (รองรับแนบรูปจริงสูงสุด 2 รูป) -->
+<div class="mb" id="rev-modal"><div class="ms">
+  <button class="x" type="button" aria-label="Close" data-close>✕</button>
+  <h3 style="font-size:1.2rem;margin-bottom:4px" data-i="revModalT"></h3>
+  <p style="font-size:.84rem;color:var(--mut);margin-bottom:14px" data-i="revModalS"></p>
+  <form id="rev-form">
+    <div class="fg"><label for="rf-code" data-i="revCodeL"></label><input id="rf-code" required maxlength="20" placeholder="NU-007" style="text-transform:uppercase"></div>
+    <div class="fg"><label for="rf-name" data-i="revNameL"></label><input id="rf-name" required maxlength="60"></div>
+    <div class="fg"><label for="rf-prov" data-i="revProvL"></label><input id="rf-prov" maxlength="40" placeholder="บุรีรัมย์ / ภูเก็ต"></div>
+    <div class="fg"><label for="rf-rate" data-i="revRateL"></label>
+      <select id="rf-rate">
+        <option value="5">★★★★★ (5/5)</option>
+        <option value="4">★★★★☆ (4/5)</option>
+        <option value="3">★★★☆☆ (3/5)</option>
+      </select>
+    </div>
+    <div class="fg"><label for="rf-text" data-i="revTextL"></label><textarea id="rf-text" rows="3" required maxlength="400"></textarea></div>
+    <div class="fg">
+      <label for="rf-photos" data-i="revPhotoL"></label>
+      <input id="rf-photos" type="file" accept="image/jpeg,image/png,image/webp" multiple>
+      <div id="rf-prev" style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"></div>
+    </div>
+    <button class="btn" type="submit" id="rf-sub" style="width:100%" data-i="revSubBtn"></button>
+    <p id="rf-msg" style="margin-top:10px;text-align:center;font-weight:600;font-size:.86rem" role="status"></p>
+  </form>
+</div></div>
+
 <!-- Admin (ต้องใส่ PIN) -->
 <div class="mb" id="admin"><div class="ms">
   <button class="x" type="button" aria-label="Close" data-close>✕</button>
@@ -166,8 +216,9 @@ footer p+p{margin-top:6px}
     <div class="fg"><label for="adm-status">สถานะ</label><select id="adm-status"><option value="Available">Available (พร้อมขาย)</option><option value="Sold">Sold (ขายแล้ว)</option></select></div>
     <div class="fg"><label for="adm-price">ราคาขาย (บาท)</label><input id="adm-price" type="number" inputmode="numeric"></div>
     <div class="fg"><label for="adm-desc">คำอธิบาย / สุขภาพแบต / ตำหนิ</label><textarea id="adm-desc" rows="3" maxlength="600"></textarea></div>
-    <div class="fg"><label for="adm-img">รูปเครื่อง: ชื่อไฟล์ในโฟลเดอร์ img/ บรรทัดละ 1 รูป (สูงสุด 10) รูปแรกคือรูปปก</label><textarea id="adm-img" rows="4" placeholder="NU-007-1.webp&#10;NU-007-2.webp"></textarea></div>
+    <div class="fg"><label for="adm-img">รูปเครื่อง: ลิงก์หรือชื่อไฟล์ บรรทัดละ 1 รูป (สูงสุด 10) รูปแรกคือรูปปก · คลิกรูปตัวอย่างเพื่อลบ</label><textarea id="adm-img" rows="4" placeholder="NU-007-1.webp&#10;NU-007-2.webp"></textarea></div>
     <div id="adm-thumbs" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px"></div>
+    <div class="fg"><label for="adm-up">เพิ่มรูปจากเครื่อง (เลือกได้หลายรูป ระบบย่อให้อัตโนมัติ)</label><input id="adm-up" type="file" accept="image/jpeg,image/png,image/webp" multiple></div>
     <div class="fg"><label for="adm-fb">ลิงก์โพสต์ Facebook (https://…)</label><input id="adm-fb" type="url"></div>
     <button class="btn" id="adm-save" type="button" style="width:100%">บันทึก</button>
   </div>
@@ -176,10 +227,10 @@ footer p+p{margin-top:6px}
 
 <script>
 const CONFIG = {
-  API_URL: "https://script.google.com/macros/s/AKfycbwSLOstoc8wKeN_EDDAap3jTNRxZAAeG-HpNqDn6iJJ-ibwVzRaPbvV6r4EF9kXCjGb3g/exec",   // วาง Web App URL จาก Apps Script ตรงนี้
+  API_URL: "https://script.google.com/macros/s/AKfycbwSLOstoc8wKeN_EDDAap3jTNRxZAAeG-HpNqDn6iJJ-ibwVzRaPbvV6r4EF9kXCjGb3g/exec",
   FB_PAGE: "https://www.facebook.com/profile.php?id=61580735953552",
   TEL: "0922808518", TEL_SHOW: "092-280-8518",
-  WARRANTY_DAYS: 7   // ระยะประกัน (วัน) แก้ที่นี่ที่เดียว ทั้งเว็บจะเปลี่ยนตาม
+  WARRANTY_DAYS: 7
 };
 
 const T = {
@@ -187,6 +238,12 @@ th:{contact:"ติดต่อร้าน",ribbon:"ทุกเครื่อ
  h1:"ขายเทคไม่ทิ้งคน",sub:"อุปกรณ์มือสองที่ซ่อมและตรวจโดยคนจริง บอกสภาพตรงๆ ในราคาที่เป็นธรรม",browse:"ดูเครื่องพร้อมส่ง",fbBtn:"เพจ Facebook ร้าน",
  stockH:"พร้อมส่ง",more:"ดูเพิ่มเติม",buy:"สั่งซื้อ / ทักแชต",defSub:"ตรวจเช็กฮาร์ดแวร์ครบทุกระบบ พร้อมใบรับรอง NuLa และประกัน {d} วัน",badge:"พร้อมส่ง",
  loading:"กำลังโหลดสต็อก…",err:"โหลดข้อมูลไม่สำเร็จ กรุณารีเฟรชหรือติดต่อร้าน",empty:"ตอนนี้สินค้าในสต็อกถูกจองหมดแล้ว เตรียมอัปเดตล็อตใหม่เร็วๆ นี้",
+ revH:"รีวิวจากลูกค้าจริง",revWriteBtn:"✍️ เขียนรีวิวให้ร้าน",revBadge:"✓ ซื้อจริง",revCust:"คุณ",revProv:"จ.",revCheckCert:"🔍 เช็กใบรับรอง",
+ revEmpty:"ยังไม่มีรีวิวในหน้านี้ — ซื้อเครื่องไปแล้วกดปุ่ม 'เขียนรีวิวให้ร้าน' ด้านบนได้เลยครับ!",
+ revModalT:"เขียนรีวิวความประทับใจ",revModalS:"กรอกรหัสประจำเครื่องบนใบรับรอง NuLa เพื่อยืนยันการซื้อจริง",
+ revCodeL:"รหัสเครื่อง (Item ID) *",revNameL:"ชื่อเล่นผู้ซื้อ *",revProvL:"จังหวัด (ไม่บังคับ)",revRateL:"ความพึงพอใจ",revTextL:"ข้อความรีวิว *",
+ revPhotoL:"แนบรูปตัวเครื่องจริง / ใบรับรอง (สูงสุด 2 รูป — ไม่บังคับ)",
+ revSubBtn:"ส่งรีวิว",revSending:"กำลังส่งรีวิวและอัปโหลดรูป…",revOk:"✓ ขอบคุณสำหรับรีวิวครับ! ข้อความและรูปจะแสดงบนหน้าเว็บหลังร้านตรวจสอบเรียบร้อยแล้ว",revErr:"ส่งรีวิวไม่สำเร็จ กรุณาตรวจสอบรหัสเครื่องอีกครั้ง",
  vTitle:"ตรวจสอบใบรับรองเครื่อง",vSub:"กรอกรหัสประจำเครื่อง (เช่น NU-007) เพื่อดูสถานะและการรับประกัน",vBtn:"ตรวจสอบ",
  found:"✓ พบข้อมูลในระบบ NuLa",nf:"✕ ไม่พบรหัสนี้ กรุณาตรวจสอบรหัสบนใบรับรองอีกครั้ง",lId:"รหัสเครื่อง",lModel:"รุ่นและสเปก",lStatus:"สถานะ",lWar:"การรับประกัน",
  p1t:"ขายเทคไม่ทิ้งคน",p1d:"แนะนำตามการใช้งานและงบจริง ไม่ยัดเยียดสเปกเกินจำเป็น",
@@ -203,6 +260,12 @@ en:{contact:"Contact",ribbon:"Every device is hardware-checked, with a certifica
  h1:"Selling technology without leaving humanity behind",sub:"Pre-owned devices repaired and checked by real people, described honestly at a fair price.",browse:"Browse devices",fbBtn:"Facebook page",
  stockH:"Ready to ship",more:"Details",buy:"Buy / Message",defSub:"Full hardware check passed, NuLa certificate and {d}-day warranty included.",badge:"AVAILABLE",
  loading:"Loading stock…",err:"Could not load stock. Please refresh or contact us.",empty:"Everything in stock is reserved right now. New devices are coming soon.",
+ revH:"Verified Buyer Reviews",revWriteBtn:"✍️ Write a Review",revBadge:"✓ Verified Buyer",revCust:"",revProv:"",revCheckCert:"🔍 Verify Cert",
+ revEmpty:"No reviews published yet — bought a device? Click 'Write a Review' above!",
+ revModalT:"Write a Review",revModalS:"Enter the Item ID on your NuLa certificate to verify your purchase.",
+ revCodeL:"Device Item ID *",revNameL:"Your Name *",revProvL:"Province / City (optional)",revRateL:"Rating",revTextL:"Your Review *",
+ revPhotoL:"Attach real device / certificate photos (up to 2 — optional)",
+ revSubBtn:"Submit Review",revSending:"Submitting review…",revOk:"✓ Thank you! Your review will appear after quick verification.",revErr:"Could not submit review. Please check your Item ID.",
  vTitle:"Verify a device certificate",vSub:"Enter the device ID (e.g. NU-007) to see its status and warranty.",vBtn:"Verify",
  found:"✓ Found in the NuLa database",nf:"✕ Device ID not found. Please check the code on your certificate.",lId:"Item ID",lModel:"Model & specs",lStatus:"Status",lWar:"Warranty",
  p1t:"Human-first",p1d:"Advice based on your real needs and budget, never unnecessary specs.",
@@ -229,7 +292,7 @@ const money = n => "฿" + Number(n || 0).toLocaleString("en-US");
 
 let lang = (navigator.language || "th").slice(0,2) === "en" ? "en" : "th";
 try{ lang = localStorage.getItem("nula-lang") || lang; }catch(e){}
-let stock = [], all = [], state = "loading", rendered = false;
+let stock = [], all = [], reviews = [], state = "loading", rendered = false;
 
 function applyText(){
   const t = T[lang];
@@ -239,6 +302,7 @@ function applyText(){
   $("fb").href = CONFIG.FB_PAGE;
   $("tel").href = "tel:" + CONFIG.TEL;
   render();
+  renderReviews();
 }
 
 function render(){
@@ -259,6 +323,38 @@ function render(){
         </div>
       </div>
     </article>`).join("") : `<p class="msg">${esc(t.empty)}</p>`;
+}
+
+function renderReviews(){
+  const grid = $("rgrid"), t = T[lang];
+  if(!reviews || !reviews.length){
+    grid.innerHTML = `<p class="msg">${esc(t.revEmpty)}</p>`;
+    return;
+  }
+  grid.innerHTML = reviews.map(r => {
+    const n = Math.max(1, Math.min(5, Number(r.rating) || 5));
+    const stars = "★".repeat(n) + "☆".repeat(5 - n);
+    const meta = [r.itemCode, r.model].filter(Boolean).join(" · ");
+    const photos = (Array.isArray(r.photos) ? r.photos : []).map(imgUrl).filter(Boolean);
+    const photoHtml = photos.length
+      ? `<div class="rphotos">${photos.map(u => `<a href="${esc(u)}" target="_blank" rel="noopener"><img src="${esc(u)}" alt="Buyer photo" loading="lazy"></a>`).join("")}</div>`
+      : "";
+    return `
+      <article class="rcard">
+        <div>
+          <div class="rtop">
+            <span class="stars" aria-label="${n} out of 5 stars">${stars}</span>
+            <span class="tag">${esc(t.revBadge)}</span>
+          </div>
+          <p class="rtxt" style="margin-top:10px">“${esc(r.comment)}”</p>
+          ${photoHtml}
+        </div>
+        <div class="rfoot">
+          <span><strong>${esc(t.revCust + r.customer)}</strong>${r.province ? ` · ${esc(t.revProv + r.province)}` : ""}</span>
+          ${r.itemCode ? `<button type="button" class="rcode" data-verify-code="${esc(r.itemCode)}" title="${esc(t.revCheckCert)}">${esc(meta)} ↗</button>` : ""}
+        </div>
+      </article>`;
+  }).join("");
 }
 
 function galleryHTML(list, alt){
@@ -302,13 +398,11 @@ function openDetail(id){
       <p style="color:var(--mut);white-space:pre-line">${esc(i.desc || tx(t.defSub))}</p>
       <p class="ok" style="margin-top:10px">✓ ${esc(warr())}</p></div>
     <p id="cert-slot" style="margin-bottom:10px"></p>
-
-    <div class="stack" id="detail-actions">
+    <div class="stack">
       <button class="btn" type="button" id="toggle-res">📌 ${esc(t.resBtn)}</button>
-      <a class="btn o" href="${esc(safeUrl(i.fbLink))}" target="_blank" rel="noopener">💬 ${esc(t.post)}</a>
       <a class="btn o" href="tel:${CONFIG.TEL}">📞 ${esc(t.call)} (${CONFIG.TEL_SHOW})</a>
+      <a class="btn o" href="${esc(safeUrl(i.fbLink))}" target="_blank" rel="noopener">💬 ${esc(t.post)}</a>
     </div>
-
     <form id="res-form" class="box" hidden style="margin-top:12px">
       <p style="font-weight:700;margin-bottom:10px">${esc(t.resTitle)} (${esc(i.id)})</p>
       <div class="fg"><label for="res-name">${esc(t.resName)} *</label><input id="res-name" required maxlength="80"></div>
@@ -317,7 +411,6 @@ function openDetail(id){
       <button class="btn" type="submit" id="res-sub" style="width:100%">${esc(t.resSubmit)}</button>
       <p id="res-msg" style="margin-top:10px;font-weight:600;font-size:.86rem;text-align:center" role="status"></p>
     </form>`;
-
   $("detail").style.display = "flex";
   initGallery($("detail-body"));
   certLink(i.id).then(u => { if(u) $("cert-slot").innerHTML = `<a class="ok" href="${esc(u)}" target="_blank" rel="noopener">📄 ${esc(CERT_TXT[lang])}</a>`; });
@@ -340,15 +433,9 @@ function openDetail(id){
         contact: $("res-contact").value.trim(),
         note: $("res-note").value.trim()
       });
-      if(r.ok) {
-        m.className = "ok"; m.textContent = t.resOk;
-        e.target.reset();
-      } else {
-        m.className = "bad"; m.textContent = r.error || t.resErr;
-      }
-    } catch(err) {
-      m.className = "bad"; m.textContent = t.resErr;
-    }
+      if(r.ok) { m.className = "ok"; m.textContent = t.resOk; e.target.reset(); }
+      else { m.className = "bad"; m.textContent = r.error || t.resErr; }
+    } catch(err) { m.className = "bad"; m.textContent = t.resErr; }
     btn.disabled = false;
   });
 }
@@ -360,9 +447,10 @@ async function load(){
     if(!r.ok) throw 0;
     const d = await r.json();
     if(d.error) throw 0;
-    stock = d.inStock || []; all = d.allDevices || []; state = "ok";
+    stock = d.inStock || []; all = d.allDevices || []; reviews = d.reviews || []; state = "ok";
   }catch(e){ state = "err"; }
   render();
+  renderReviews();
 }
 
 const CERT_TXT = {th:"ดูใบรับรองฉบับเต็ม (PDF)", en:"View full certificate (PDF)"};
@@ -386,7 +474,7 @@ async function verify(){
     : `<p class="bad">${esc(t.nf)}</p>`;
 }
 
-/* ===== Admin: ต้องใส่ PIN, ข้อมูลเต็มดึงผ่าน POST เท่านั้น ===== */
+/* ===== Admin ===== */
 let adm = [], pin = "";
 const msg = (s, bad) => { const m = $("adm-msg"); m.textContent = s; m.className = bad ? "bad" : "ok"; };
 const post = async body => (await fetch(CONFIG.API_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(body)})).json();
@@ -402,7 +490,7 @@ async function unlock(){
     const r = await post({pin, action:"list"});
     if(!r.ok) return msg(r.error || "PIN ไม่ถูกต้อง", true);
     adm = r.devices || [];
-    $("adm-id").innerHTML = adm.map(d => `<option value="${esc(d.id)}">${esc(d.id)} — ${esc(d.model)}</option>`).join("");
+    $("adm-id").innerHTML = adm.map(d => `<option value="${esc(d.id)}">${esc(d.id)} — ${esc(d.model)} [${esc(d.status)}]</option>`).join("");
     fill(); $("adm-form").hidden = false; msg("");
   }catch(e){ msg("เชื่อมต่อไม่ได้ ตรวจว่า Deploy New Version แล้ว", true); }
 }
@@ -416,9 +504,38 @@ function fill(){
 
 function thumbs(){
   const names = $("adm-img").value.split(/[\s,]+/).filter(Boolean).slice(0, 10);
-  $("adm-thumbs").innerHTML = names.map(n => { const u = imgUrl(n); return u
-    ? `<img src="${esc(u)}" alt="" title="${esc(n)}" style="width:56px;height:56px;object-fit:cover;border-radius:8px;border:2px solid var(--ok)" onerror="this.style.borderColor='var(--bad)'">`
-    : `<span class="bad" style="font-size:.78rem">✕ ${esc(n.slice(0, 18))}</span>`; }).join("");
+  $("adm-thumbs").innerHTML = names.map((n, k) => { const u = imgUrl(n); return u
+    ? `<img src="${esc(u)}" alt="" title="คลิกเพื่อลบ ${esc(n.slice(0, 40))}" data-n="${k}" style="cursor:pointer;width:56px;height:56px;object-fit:cover;border-radius:8px;border:2px solid var(--ok)" onerror="this.style.borderColor='var(--bad)'">`
+    : `<span class="bad" data-n="${k}" title="คลิกเพื่อลบ" style="cursor:pointer;font-size:.78rem">✕ ${esc(n.slice(0, 18))}</span>`; }).join("");
+}
+
+function shrink(file, maxSide = 1200, qual = .82){
+  return new Promise((res, rej) => {
+    const im = new Image(), u = URL.createObjectURL(file);
+    im.onload = () => {
+      URL.revokeObjectURL(u);
+      const s = Math.min(1, maxSide / Math.max(im.width, im.height)), c = document.createElement("canvas");
+      c.width = Math.round(im.width * s); c.height = Math.round(im.height * s);
+      c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+      res(c.toDataURL("image/jpeg", qual));
+    };
+    im.onerror = () => rej(new Error("อ่านไฟล์นี้ไม่ได้ (ไฟล์ HEIC ให้แปลงเป็น JPEG ก่อน)"));
+    im.src = u;
+  });
+}
+
+async function onUpload(e){
+  const files = [...e.target.files].slice(0, 10); if(!files.length) return;
+  const ta = $("adm-img"), id = $("adm-id").value;
+  for(let k = 0; k < files.length; k++){
+    msg(`กำลังอัปโหลดรูป ${k + 1}/${files.length}…`);
+    try{
+      const r = await post({pin, action:"upload", id, data: await shrink(files[k])});
+      if(!r.ok) throw new Error(r.error || "ตรวจว่า Deploy New Version แล้ว");
+      ta.value = (ta.value.trim() ? ta.value.trim() + "\n" : "") + r.url; thumbs();
+    }catch(err){ msg(`รูปที่ ${k + 1} ไม่สำเร็จ: ` + err.message, true); e.target.value = ""; return; }
+  }
+  e.target.value = ""; msg("✓ อัปโหลดแล้ว กด “บันทึก” เพื่อนำรูปขึ้นเว็บ");
 }
 
 async function save(){
@@ -426,7 +543,7 @@ async function save(){
   try{
     const r = await post({pin, id:$("adm-id").value, status:$("adm-status").value, price:$("adm-price").value,
       desc:$("adm-desc").value.trim(), fbLink:$("adm-fb").value.trim(), images:$("adm-img").value});
-    if(r.ok){ msg("✓ บันทึกลง Google Sheets แล้ว"); load(); }
+    if(r.ok){ const sid = $("adm-id").value, sst = $("adm-status").value; msg(`✓ บันทึก ${sid} (${sst}) ลงชีตแล้ว` + (sst === "Sold" ? " — เครื่องนี้ขายแล้ว จะไม่แสดงในหน้า “พร้อมส่ง”" : "")); load(); }
     else msg(r.error || "บันทึกไม่สำเร็จ", true);
   }catch(e){ msg("บันทึกไม่สำเร็จ (เชื่อมต่อไม่ได้) กรุณาลองใหม่", true); }
   b.disabled = false;
@@ -434,6 +551,13 @@ async function save(){
 
 /* ===== events ===== */
 $("grid").addEventListener("click", e => { const t = e.target.closest("[data-id]"); if(t) openDetail(t.dataset.id); });
+$("rgrid").addEventListener("click", e => {
+  const btn = e.target.closest("[data-verify-code]");
+  if(!btn) return;
+  $("cert-input").value = btn.dataset.verifyCode;
+  $("verify").scrollIntoView({behavior:"smooth"});
+  verify();
+});
 document.querySelectorAll(".mb").forEach(m => m.addEventListener("click", e => { if(e.target === m || e.target.hasAttribute("data-close")) closeAll(); }));
 document.addEventListener("keydown", e => { if(e.key === "Escape") closeAll(); });
 $("vbtn").addEventListener("click", verify);
@@ -444,9 +568,68 @@ $("unlock").addEventListener("click", unlock);
 $("adm-pin").addEventListener("keydown", e => { if(e.key === "Enter") unlock(); });
 $("adm-id").addEventListener("change", fill);
 $("adm-img").addEventListener("input", thumbs);
+$("adm-up").addEventListener("change", onUpload);
+$("adm-thumbs").addEventListener("click", e => {
+  const n = e.target.dataset && e.target.dataset.n; if(n === undefined) return;
+  const names = $("adm-img").value.split(/[\s,]+/).filter(Boolean); names.splice(Number(n), 1);
+  $("adm-img").value = names.join("\n"); thumbs();
+});
 $("adm-save").addEventListener("click", save);
 if(location.hash === "#admin") $("admin-btn").hidden = false;
 addEventListener("hashchange", () => { $("admin-btn").hidden = location.hash !== "#admin"; });
+
+// พรีวิวรูปที่ลูกค้าเลือกในฟอร์มรีวิว
+let revPhotoData = [];
+$("rf-photos").addEventListener("change", async e => {
+  const files = [...e.target.files].slice(0, 2);
+  revPhotoData = [];
+  $("rf-prev").innerHTML = "";
+  for(const f of files){
+    try{
+      const b64 = await shrink(f, 900, 0.78);
+      if(b64.length < 400000){
+        revPhotoData.push(b64);
+        $("rf-prev").innerHTML += `<img src="${b64}" style="width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid var(--line)">`;
+      }
+    }catch(_){}
+  }
+});
+
+$("open-rev").addEventListener("click", () => {
+  $("rf-msg").textContent = "";
+  $("rf-prev").innerHTML = "";
+  revPhotoData = [];
+  $("rev-modal").style.display = "flex";
+  $("rf-code").focus();
+});
+
+$("rev-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const t = T[lang], btn = $("rf-sub"), m = $("rf-msg");
+  btn.disabled = true; m.className = ""; m.textContent = t.revSending;
+  try {
+    const r = await post({
+      action: "review",
+      itemCode: $("rf-code").value.trim().toUpperCase(),
+      customer: $("rf-name").value.trim(),
+      province: $("rf-prov").value.trim(),
+      rating: $("rf-rate").value,
+      comment: $("rf-text").value.trim(),
+      photos: revPhotoData
+    });
+    if(r.ok) {
+      m.className = "ok"; m.textContent = t.revOk;
+      e.target.reset();
+      $("rf-prev").innerHTML = "";
+      revPhotoData = [];
+    } else {
+      m.className = "bad"; m.textContent = r.error || t.revErr;
+    }
+  } catch(err) {
+    m.className = "bad"; m.textContent = t.revErr;
+  }
+  btn.disabled = false;
+});
 
 applyText();
 load();
